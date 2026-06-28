@@ -15,7 +15,6 @@ import {
   Award,
   Lock,
   ArrowRight,
-  Pencil,
   ThumbsUp,
   Search,
   ShoppingCart,
@@ -27,6 +26,8 @@ import {
   MessageCircle,
 } from "lucide-react"
 import { useCart } from "@/lib/cart-context"
+import ReviewSection from "@/components/ReviewSection"
+import type { Review } from "@/lib/actions"
 
 // ─── Types matching the DB JSONB columns ────────────────────────────────────
 
@@ -80,7 +81,21 @@ const trustBadges = [
   { icon: Lock,        label: "Secure\nCheckout" },
 ]
 
-export default function ProductPageClient({ product }: { product: Product }) {
+type ProductPageProps = {
+  product: Product
+  initialReviews: Review[]
+  isLoggedIn: boolean
+  currentUserId: string | null
+  existingReview: Review | null
+}
+
+export default function ProductPageClient({
+  product,
+  initialReviews,
+  isLoggedIn,
+  currentUserId,
+  existingReview,
+}: ProductPageProps) {
   const { addItem } = useCart()
   const [activeImage, setActiveImage] = useState(0)
   const [quantity, setQuantity]       = useState(1)
@@ -99,14 +114,6 @@ export default function ProductPageClient({ product }: { product: Product }) {
 
   // Round rating to determine filled stars
   const filledStars = Math.round(rating)
-
-  const ratingDistribution = [
-    { stars: 5, percent: 86 },
-    { stars: 4, percent: 10 },
-    { stars: 3, percent: 0 },
-    { stars: 2, percent: 5 },
-    { stars: 1, percent: 0 },
-  ]
 
   const detailSections = [
     {
@@ -476,44 +483,15 @@ export default function ProductPageClient({ product }: { product: Product }) {
         )}
 
         {/* Customer Reviews */}
-        <section className="mt-6">
-          <div className="text-center">
-            <h2 className="text-balance text-2xl font-bold text-gray-900 md:text-3xl">Customer Reviews</h2>
-            <p className="mt-1 text-sm text-gray-500">Real experiences from verified buyers</p>
-          </div>
-          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 md:p-8">
-            <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
-              <div className="flex flex-col items-start">
-                <span className="text-5xl font-bold leading-none text-gray-900">{rating}</span>
-                <div className="mt-3 flex items-center gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < filledStars ? "fill-amber-500 text-amber-500" : "fill-gray-200 text-gray-200"}`} />
-                  ))}
-                </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  Based on <span className="font-semibold text-gray-900">{reviewCount}</span> reviews
-                </p>
-                <button type="button" className="mt-5 inline-flex items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-100">
-                  <Pencil className="h-3.5 w-3.5" />
-                  Write a Review
-                </button>
-              </div>
-              <div className="flex flex-col gap-2.5">
-                {ratingDistribution.map((row) => (
-                  <div key={row.stars} className="flex items-center gap-3">
-                    <span className="flex w-8 items-center gap-1 text-sm text-gray-500">
-                      {row.stars}<Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                    </span>
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-200">
-                      <div className="h-full rounded-full bg-amber-500" style={{ width: `${row.percent}%` }} />
-                    </div>
-                    <span className="w-10 text-right text-sm text-gray-500">{row.percent}%</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <ReviewSection
+          productId={product.id}
+          initialReviews={initialReviews}
+          isLoggedIn={isLoggedIn}
+          currentUserId={currentUserId}
+          existingReview={existingReview}
+          productRating={rating}
+          productReviewCount={reviewCount}
+        />
       </div>
 
       {/* Trust bar */}

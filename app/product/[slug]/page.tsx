@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
-import { getProductBySlug } from "@/lib/actions"
+import { getProductBySlug, getProductReviews, getMyReview } from "@/lib/actions"
+import { createClient } from "@/lib/supabase/server"
 import ProductPageClient from "@/components/ProductPageClient"
 
 export const dynamic = "force-dynamic"
@@ -18,5 +19,22 @@ export default async function ProductSlugPage({ params }: { params: Promise<{ sl
   const { slug } = await params
   const product = await getProductBySlug(slug)
   if (!product) notFound()
-  return <ProductPageClient product={product} />
+
+  // Fetch auth state + reviews in parallel
+  const supabase = await createClient()
+  const [{ data: { user } }, reviews, existingReview] = await Promise.all([
+    supabase.auth.getUser(),
+    getProductReviews(product.id),
+    getMyReview(product.id),
+  ])
+
+  return (
+    <ProductPageClient
+      product={product}
+      initialReviews={reviews}
+      isLoggedIn={!!user}
+      currentUserId={user?.id ?? null}
+      existingReview={existingReview}
+    />
+  )
 }

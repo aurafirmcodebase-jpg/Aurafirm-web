@@ -557,7 +557,119 @@ export async function adminGetTopProducts() {
   return Object.values(map).sort((a, b) => b.revenue - a.revenue).slice(0, 5)
 }
 
+// ─── Reviews ───────────────────────────────────────────────────────────────────
+
+export type Review = {
+  id: string
+  product_id: string
+  customer_id: string
+  customer_name: string
+  rating: number
+  title: string | null
+  comment: string
+  is_approved: boolean
+  is_verified: boolean
+  created_at: string
+}
+
+/** Get all approved reviews for a product (public). */
+export async function getProductReviews(productId: string): Promise<Review[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('product_id', productId)
+    .eq('is_approved', true)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data ?? []
+}
+
+/** Get the currently logged-in user's review for a product (if any). */
+export async function getMyReview(productId: string): Promise<Review | null> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('product_id', productId)
+    .eq('customer_id', user.id)
+    .single()
+  return data ?? null
+}
+
+/** Submit or update a review. Returns an error string on failure. */
+export async function submitReview(payload: {
+  productId: string
+  rating: number
+  title: string
+  comment: string
+}): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'You must be logged in to write a review.' }
+
+  // Fetch customer name from profile
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name')
+    .eq('id', user.id)
+    .single()
+  const customerName = profile?.full_name ?? 'Customer'
+
+  const { error } = await supabase.from('reviews').upsert({
+    product_id: payload.productId,
+    customer_id: user.id,
+    customer_name: customerName,
+    rating: payload.rating,
+    title: payload.title || null,
+    comment: payload.comment,
+    is_approved: false, // requires admin approval
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'product_id,customer_id' })
+
+  if (error) return { error: error.message }
+  revalidatePath(`/product`)
+  return {}
+}
+
+/** Delete the current user's own review. */
+export async function deleteMyReview(reviewId: string): Promise<void> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+  await supabase.from('reviews').delete().eq('id', reviewId).eq('customer_id', user.id)
+  revalidatePath('/product')
+}
+
+// ─── Admin Reviews ─────────────────────────────────────────────────────────────
+
 export async function adminGetReviews() {
-  // Placeholder — no reviews table yet, returns empty
-  return [] as { id: string; customer_name: string; product_name: string; rating: number; comment: string; created_at: string; is_approved: boolean }[]
+  const supabase = createAdminClient()
+  const { data, error } = await supabase
+    .from('reviews')
+    .select(`*, products(name, slug, image_url)`)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []) as (Review & { products: { name: string; slug: string | null; image_url: string | null } | null })[]
+}
+
+export async function adminApproveReview(id: string, is_approved: boolean) {
+  const supabase = createAdminClient()
+  const { error } = await supabase
+    .from('reviews')
+    .update({ is_approved, updated_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) throw error
+  revalidatePath('/admin/reviews')
+  revalidatePath('/product')
+}
+
+export async function adminDeleteReview(id: string) {
+  const supabase = createAdminClient()
+  const { error } = await supabase.from('reviews').delete().eq('id', id)
+  if (error) throw error
+  revalidatePath('/admin/reviews')
+  revalidatePath('/product')
 }
