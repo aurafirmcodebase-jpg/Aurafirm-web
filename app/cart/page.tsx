@@ -318,37 +318,13 @@ export default function CartPage() {
                 </div>
               )}
 
-              {/* Free shipping progress */}
+              {/* Free shipping banner */}
               {items.length > 0 && (
-                <div className="border-t border-[#f0d8c8] bg-[#fdf6f2] px-6 py-4">
-                  <div className="flex items-center justify-between">
-                    <p className="flex items-center gap-2 text-sm text-neutral-700">
-                      <Truck className="h-4 w-4 text-[#c9744e]" />
-                      {amountToFreeShipping > 0 ? (
-                        <>
-                          You&apos;re{" "}
-                          <strong className="text-neutral-900">
-                            ₹{amountToFreeShipping.toLocaleString("en-IN")}
-                          </strong>{" "}
-                          away from{" "}
-                          <strong className="text-neutral-900">FREE SHIPPING</strong>
-                        </>
-                      ) : (
-                        <span className="font-semibold text-[#6b8f5e]">
-                          You&apos;ve unlocked FREE SHIPPING!
-                        </span>
-                      )}
-                    </p>
-                    <span className="text-xs text-neutral-500">
-                      ₹{subtotal.toLocaleString("en-IN")} / ₹{FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f0d8c8]">
-                    <div
-                      className="h-full rounded-full bg-[#c9744e] transition-all duration-500"
-                      style={{ width: `${freeShippingProgress}%` }}
-                    />
-                  </div>
+                <div className="border-t border-[#f0d8c8] bg-[#fdf6f2] px-6 py-3">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-[#6b8f5e]">
+                    <Truck className="h-4 w-4" />
+                    Free Shipping on all orders!
+                  </p>
                 </div>
               )}
             </div>
