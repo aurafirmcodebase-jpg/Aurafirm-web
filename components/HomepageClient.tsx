@@ -258,9 +258,11 @@ export default function LumoraLanding({ products = [] }: { products: DBProduct[]
       <div className="flex items-center justify-between bg-[#8a4a32] px-4 py-2 text-[11px] text-white sm:px-8">
         <div className="flex-1 text-center tracking-wide">
           <span className="opacity-90">
-            {"\u2698 Vegan - 100% cruelty-free & plant-powered | "}
-            <strong>Dermat Tested</strong>
-            {" - Safe for sensitive skins \u2698"}
+            {"Also available on "}
+            <strong>Amazon</strong>
+            {" & "}
+            <strong>Flipkart</strong>
+            {" — Shop now on your favourite platform"}
           </span>
         </div>
         <div className="hidden items-center gap-3 sm:flex">

@@ -153,9 +153,11 @@ export default function ProductPageClient({
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 md:px-6">
           <span className="hidden flex-1 md:block" />
           <p className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-center text-[10px] sm:text-xs md:text-sm">
-            {"Vegan \u2013 100% cruelty-free & plant-powered | "}
-            <span className="font-semibold">Dermat Tested</span>
-            {" \u2013 Safe for sensitive skins"}
+            {"Also available on "}
+            <span className="font-semibold">Amazon</span>
+            {" & "}
+            <span className="font-semibold">Flipkart</span>
+            {" \u2014 Shop now on your favourite platform"}
           </p>
           <div className="flex flex-1 items-center justify-end gap-3 text-white/90">
             <a href="#" aria-label="Photos" className="transition-opacity hover:opacity-70"><Camera className="h-4 w-4" /></a>

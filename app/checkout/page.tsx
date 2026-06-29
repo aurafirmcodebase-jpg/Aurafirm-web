@@ -842,9 +842,11 @@ function AnnouncementBar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 md:px-6">
         <span className="hidden flex-1 md:block" />
         <p className="flex-1 text-center text-[10px] sm:text-xs">
-          {"♡ Vegan \u2022 100% cruelty free & plant powered | "}
-          <span className="font-semibold">Dermatest Tested</span>
-          {" \u2013 Safe for sensitive skin \uD83C\uDF31"}
+          {"Also available on "}
+          <span className="font-semibold">Amazon</span>
+          {" & "}
+          <span className="font-semibold">Flipkart</span>
+          {" \u2014 Shop now on your favourite platform"}
         </p>
         <div className="flex flex-1 items-center justify-end gap-3 text-white/90">
           <a href="#" aria-label="Photos"><Camera className="h-3.5 w-3.5" /></a>
