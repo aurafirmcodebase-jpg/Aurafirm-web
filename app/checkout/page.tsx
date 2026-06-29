@@ -60,7 +60,7 @@ const brandBar = [
 ]
 
 const trustBadges = [
-  { icon: Truck, title: "Free Shipping", sub: "On orders above ₹999" },
+  { icon: Truck, title: "Free Shipping", sub: "On all orders" },
   { icon: Lock, title: "Secure Payment", sub: "100% protected" },
   { icon: ShieldCheck, title: "Dermatest Tested", sub: "Safe for sensitive skin" },
   { icon: Leaf, title: "Vegan", sub: "Plant Powered" },
@@ -68,7 +68,6 @@ const trustBadges = [
 
 const DISCOUNT = 200
 const SHIPPING_EXPRESS = 149
-const TAX_RATE = 0.18
 
 type PaymentMethod = "online" | "cod"
 
@@ -114,8 +113,7 @@ export default function CheckoutPage() {
   const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0)
   const shippingCost = delivery === "express" ? SHIPPING_EXPRESS : 0
   const discount = couponApplied ? couponDiscount : 0
-  const tax = Math.round(subtotal * TAX_RATE)
-  const grandTotal = subtotal - discount + shippingCost + tax
+  const grandTotal = subtotal - discount + shippingCost
 
   const handleApplyCoupon = async () => {
     if (!coupon.trim()) return
@@ -163,7 +161,7 @@ export default function CheckoutPage() {
           customerPhone: `+91${billing.phone}`,
           billingAddress: { address: billing.address, apt: billing.apt, city: billing.city, state: billing.state, pin: billing.pin },
           shippingAddress: shippingAddr as Record<string, string>,
-          subtotal, discount, shippingCost, tax, grandTotal,
+          subtotal, discount, shippingCost, tax: 0, grandTotal,
           couponCode: couponApplied ? coupon : undefined,
           paymentMethod: "cod",
           paymentStatus: "pending",
@@ -220,7 +218,7 @@ export default function CheckoutPage() {
               subtotal,
               discount,
               shippingCost,
-              tax,
+              tax: 0,
               grandTotal,
               couponCode: couponApplied ? coupon : undefined,
               paymentMethod: "razorpay",
@@ -715,17 +713,13 @@ export default function CheckoutPage() {
                     {shippingCost === 0 ? "FREE" : `₹${shippingCost}`}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-neutral-600">Tax (18%)</span>
-                  <span className="font-semibold">₹{tax}</span>
-                </div>
                 <div className="flex justify-between border-t border-[#f0d8c8] pt-3">
                   <span className="text-base font-extrabold text-neutral-900">Grand Total</span>
                   <span className="text-base font-extrabold text-[#c9744e]">
                     ₹{grandTotal.toLocaleString("en-IN")}
                   </span>
                 </div>
-                <p className="text-[11px] text-neutral-500">Inclusive of all taxes</p>
+                <p className="text-[11px] text-neutral-500">Taxes included in product price</p>
               </div>
 
               {/* Coupon */}

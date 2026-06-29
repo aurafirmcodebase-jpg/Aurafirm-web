@@ -80,8 +80,6 @@ const footerColumns = [
   },
 ]
 
-const TAX_RATE = 0.18
-
 export default function CartPage() {
   const { items, removeItem, updateQuantity, addItem } = useCart()
   const [wishlist, setWishlist] = useState<Set<string>>(new Set())
@@ -89,8 +87,7 @@ export default function CartPage() {
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shippingCost = 0
-  const tax = Math.round(subtotal * TAX_RATE)
-  const grandTotal = subtotal + shippingCost + tax
+  const grandTotal = subtotal + shippingCost
 
   const toggleWishlist = (id: string) => {
     setWishlist((prev) => {
@@ -410,10 +407,6 @@ export default function CartPage() {
                     )}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-neutral-600">Tax (18%)</span>
-                  <span className="font-semibold">₹{tax.toLocaleString("en-IN")}</span>
-                </div>
               </div>
 
               <div className="my-4 border-t border-dashed border-[#f0d8c8]" />
@@ -421,7 +414,7 @@ export default function CartPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-base font-extrabold text-neutral-900">Grand Total</p>
-                  <p className="text-[10px] text-neutral-500">Inclusive of all taxes</p>
+                  <p className="text-[10px] text-neutral-500">Taxes included in product price</p>
                 </div>
                 <p className="text-2xl font-extrabold text-[#c9744e]">
                   ₹{grandTotal.toLocaleString("en-IN")}
