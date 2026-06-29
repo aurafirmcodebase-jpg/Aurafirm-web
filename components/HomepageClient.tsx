@@ -32,7 +32,12 @@ import {
 import { useCart } from "@/lib/cart-context"
 import UserMenu from "@/components/UserMenu"
 
-const navItems = ["Shop", "Our Story", "Why AURAFIRM", "Contact"]
+const navItems = [
+  { label: "Shop",          href: "/shop" },
+  { label: "Our Story",     href: "/about" },
+  { label: "Why AURAFIRM",  href: "/about#why-aurafirm" },
+  { label: "Contact",       href: "/contact" },
+]
 
 const heroFeatures = [
   { icon: FlaskConical, title: "Science-Backed", desc: "Research-driven formulations" },
@@ -159,9 +164,32 @@ const heroProducts = [
 ]
 
 const footerColumns = [
-  { title: "Company", links: ["About Us", "Blogs", "Contact Us", "Career"] },
-  { title: "Customer Services", links: ["My Account", "Track Your Order", "Return", "FAQ"] },
-  { title: "Our Information", links: ["Privacy", "User Terms & Condition", "Return Policy"] },
+  {
+    title: "Company",
+    links: [
+      { label: "About Us",    href: "/about" },
+      { label: "Blogs",       href: "/blogs" },
+      { label: "Contact Us",  href: "/contact" },
+      { label: "Career",      href: "/career" },
+    ],
+  },
+  {
+    title: "Customer Services",
+    links: [
+      { label: "My Account",        href: "/account/orders" },
+      { label: "Track Your Order",  href: "/account/orders" },
+      { label: "Return",            href: "/contact" },
+      { label: "FAQ",               href: "/contact" },
+    ],
+  },
+  {
+    title: "Our Information",
+    links: [
+      { label: "Privacy",                  href: "/privacy" },
+      { label: "User Terms & Condition",   href: "/terms" },
+      { label: "Return Policy",            href: "/return-policy" },
+    ],
+  },
 ]
 
 const socialIcons = [Camera, AtSign, Share2, Play, MessageCircle]
@@ -266,16 +294,14 @@ export default function LumoraLanding({ products = [] }: { products: DBProduct[]
           </div>
 
           <nav className="hidden items-center gap-8 text-sm md:flex">
-            {navItems.map((item, i) => (
-              <a
-                key={item}
-                href="#"
-                className={`transition-colors hover:text-[#b86244] ${
-                  i === 0 ? "border-b-2 border-[#b86244] pb-0.5 font-semibold text-[#b86244]" : "text-neutral-700"
-                }`}
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="text-neutral-700 transition-colors hover:text-[#b86244]"
               >
-                {item}
-              </a>
+                {item.label}
+              </Link>
             ))}
           </nav>
 
@@ -636,9 +662,9 @@ Shop <span className="border-b-4 border-[#e3a985] text-[#c9744e]">Our Wellness</
             <p className="mt-2 text-xs leading-relaxed text-white/70">
               Our team will answer all your questions. We ensure a quick response.
             </p>
-            <button className="mt-6 rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#8a4a32] transition-colors hover:bg-white/90">
+            <Link href="/contact" className="mt-6 inline-block rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#8a4a32] transition-colors hover:bg-white/90">
               Contact Us
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -711,10 +737,10 @@ Shop <span className="border-b-4 border-[#e3a985] text-[#c9744e]">Our Wellness</
                 <h4 className="font-sans text-sm font-bold text-neutral-800">{col.title}</h4>
                 <ul className="mt-4 flex flex-col gap-3">
                   {col.links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="text-sm text-neutral-500 transition-colors hover:text-neutral-800">
-                        {link}
-                      </a>
+                    <li key={link.label}>
+                      <Link href={link.href} className="text-sm text-neutral-500 transition-colors hover:text-neutral-800">
+                        {link.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
