@@ -11,10 +11,16 @@ import {
   Sparkles,
   Globe,
   Award,
-  ChevronRight,
+  ChevronDown,
   ArrowRight,
   Menu,
   X,
+  Camera,
+  AtSign,
+  Share2,
+  Play,
+  MessageCircle,
+  Sprout,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -48,6 +54,37 @@ type Pillar = {
 
 const LOGO =
   "https://res.cloudinary.com/df01whs60/image/upload/v1782242359/AURAFIRM_logo_PNG_160x_drciiz.avif"
+
+const footerColumns = [
+  {
+    title: "Company",
+    links: [
+      { label: "About Us",   href: "/about" },
+      { label: "Blogs",      href: "/blogs" },
+      { label: "Contact Us", href: "/contact" },
+      { label: "Career",     href: "/career" },
+    ],
+  },
+  {
+    title: "Customer Services",
+    links: [
+      { label: "My Account",       href: "/account/orders" },
+      { label: "Track Your Order", href: "/account/orders" },
+      { label: "Return",           href: "/contact" },
+      { label: "FAQ",              href: "/contact" },
+    ],
+  },
+  {
+    title: "Our Information",
+    links: [
+      { label: "Privacy",                 href: "/privacy" },
+      { label: "User Terms & Condition",  href: "/terms" },
+      { label: "Return Policy",           href: "/return-policy" },
+    ],
+  },
+]
+
+const socialIcons = [Camera, AtSign, Share2, Play, MessageCircle]
 
 export default function WhyAurafirmClient({ pillars }: { pillars: Pillar[] }) {
   const { items } = useCart()
@@ -257,19 +294,82 @@ export default function WhyAurafirmClient({ pillars }: { pillars: Pillar[] }) {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#f0e0d6] bg-white py-8 text-center text-xs text-neutral-400">
-        <p>© {new Date().getFullYear()} AURAFIRM. All rights reserved.</p>
-        <div className="mt-3 flex flex-wrap items-center justify-center gap-4">
-          {[
-            { label: "Home", href: "/" },
-            { label: "Shop", href: "/shop" },
-            { label: "Contact", href: "/contact" },
-            { label: "Privacy", href: "/privacy" },
-          ].map((l) => (
-            <Link key={l.label} href={l.href} className="hover:text-neutral-700">
-              {l.label}
-            </Link>
-          ))}
+      <footer className="bg-[#faf5f3] px-6 pb-8 pt-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-6">
+            {/* Brand column */}
+            <div className="lg:col-span-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#8a4a32] text-white">
+                  <Sprout className="h-5 w-5" />
+                </div>
+                <span className="font-sans text-2xl font-bold text-neutral-800">Aurafirm.</span>
+              </div>
+              <p className="mt-5 max-w-xs text-sm leading-relaxed text-neutral-500">
+                Where science meets self-care. We create high-quality, safe, and effective skincare and wellness solutions built on purity, innovation, and care.
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                {socialIcons.map((Icon, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    aria-label="Social media link"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8a4a32] text-white transition-colors hover:bg-[#6f3a26]"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Link columns */}
+            {footerColumns.map((col) => (
+              <div key={col.title}>
+                <h4 className="font-sans text-sm font-bold text-neutral-800">{col.title}</h4>
+                <ul className="mt-4 flex flex-col gap-3">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link href={link.href} className="text-sm text-neutral-500 transition-colors hover:text-neutral-800">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+
+            {/* Contact Info */}
+            <div>
+              <h4 className="font-sans text-sm font-bold text-neutral-800">Contact Info</h4>
+              <ul className="mt-4 flex flex-col gap-3 text-sm text-neutral-500">
+                <li>+0123-456-789</li>
+                <li>care@aurafirm.com</li>
+                <li>
+                  8502 Preston Rd.
+                  <br />
+                  Inglewood, Maine
+                  <br />
+                  98380
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-neutral-200 pt-6 sm:flex-row">
+            <p className="text-sm text-neutral-500">
+              Copyright {"\u00A9"} 2025 <span className="text-[#c79a4b]">Aurafirm.</span> All Rights Reserved.
+            </p>
+            <div className="flex items-center gap-3 text-sm text-neutral-600">
+              <button className="flex items-center gap-1 hover:text-neutral-800">
+                English <ChevronDown className="h-4 w-4" />
+              </button>
+              <span className="text-neutral-300">|</span>
+              <button className="flex items-center gap-1 hover:text-neutral-800">
+                USD <ChevronDown className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
