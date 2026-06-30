@@ -72,44 +72,49 @@ export default function AdminSidebar({
       }`}
     >
       {/* Logo / icon row */}
-      <div
-        className={`flex items-center border-b border-neutral-100 px-3 py-3 ${
-          isDesktop && collapsed ? "justify-center" : "justify-between"
-        }`}
-      >
-        {isDesktop && collapsed ? (
-          /* Collapsed: show small logo mark only */
-          <Link href="/admin" aria-label="AURAFIRM admin home">
-            <Image
-              src="https://res.cloudinary.com/df01whs60/image/upload/v1782242359/AURAFIRM_logo_PNG_160x_drciiz.avif"
-              alt="AURAFIRM"
-              width={32}
-              height={32}
-              className="h-8 w-8 object-contain"
-            />
-          </Link>
-        ) : (
-          <>
-            <Link href="/admin" onClick={!isDesktop ? onClose : undefined}>
-              <Image
-                src="https://res.cloudinary.com/df01whs60/image/upload/v1782242359/AURAFIRM_logo_PNG_160x_drciiz.avif"
-                alt="AURAFIRM logo"
-                width={110}
-                height={38}
-                className="object-contain"
-              />
-            </Link>
-            {/* Close button — mobile only */}
-            {!isDesktop && (
-              <button
-                onClick={onClose}
-                aria-label="Close sidebar"
-                className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
+      <div className="flex items-center justify-between border-b border-neutral-100 px-3 py-3">
+        {/* Logo — always visible; shrinks to icon when collapsed */}
+        <Link
+          href="/admin"
+          onClick={!isDesktop ? onClose : undefined}
+          aria-label="AURAFIRM admin home"
+          className="shrink-0"
+        >
+          <Image
+            src="https://res.cloudinary.com/df01whs60/image/upload/v1782242359/AURAFIRM_logo_PNG_160x_drciiz.avif"
+            alt="AURAFIRM logo"
+            width={isDesktop && collapsed ? 32 : 110}
+            height={isDesktop && collapsed ? 32 : 38}
+            className={`object-contain transition-all duration-300 ${
+              isDesktop && collapsed ? "h-8 w-8" : ""
+            }`}
+          />
+        </Link>
+
+        {/* Desktop: collapse/expand chevron button beside logo */}
+        {isDesktop && (
+          <button
+            onClick={onToggleCollapse}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors shrink-0"
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
             )}
-          </>
+          </button>
+        )}
+
+        {/* Mobile: close button beside logo */}
+        {!isDesktop && (
+          <button
+            onClick={onClose}
+            aria-label="Close sidebar"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700 transition-colors shrink-0"
+          >
+            <X className="h-4 w-4" />
+          </button>
         )}
       </div>
 
@@ -172,26 +177,7 @@ export default function AdminSidebar({
           )}
         </button>
 
-        {/* Desktop collapse toggle */}
-        {isDesktop && (
-          <button
-            onClick={onToggleCollapse}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand" : "Collapse"}
-            className={`flex w-full items-center rounded-xl px-2.5 py-1.5 text-sm font-medium text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-700 ${
-              collapsed ? "justify-center" : "gap-3"
-            }`}
-          >
-            {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
-            ) : (
-              <>
-                <ChevronLeft className="h-4 w-4" />
-                <span>Collapse</span>
-              </>
-            )}
-          </button>
-        )}
+
       </div>
     </aside>
   )
